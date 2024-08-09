@@ -6,6 +6,7 @@ import App from "./App";
 import ProtectedRoute from "./ProtectedRoute";
 import RecipeList from "./RecipeList";
 import OrderList from "./OrderList";
+import EditRecipe from "./EditRecipe";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -13,14 +14,22 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       {
-        path: "/login",
+        path: "login",
         element: <Login />,
       },
       {
-        path: "/signup",
+        path: "signup",
         element: <Signup />,
       },
-      { path: "/recipe", element: <ProtectedRoute element={RecipeList} /> },
+      {
+        path: "recipe/:recipeId",
+        element: <ProtectedRoute element={EditRecipe} />,
+      },
+      {
+        path: "recipe",
+        element: <ProtectedRoute element={RecipeList} />,
+      },
+
       { path: "/order", element: <ProtectedRoute element={OrderList} /> },
     ],
   },

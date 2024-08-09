@@ -17,10 +17,23 @@ const api = createApi({
   baseQuery: baseQuery,
   tagTypes: ["Recipe", "Category"],
   endpoints: (builder) => ({
+    //GET one recipe
+    getRecipe: builder.query({
+      query: (recipeId) => `/admin/recipe/${recipeId}`,
+      providesTags: (result, error, recipeId) => [
+        { type: "Recipe", id: recipeId },
+      ],
+    }),
     // GET all recipes
     getRecipes: builder.query({
-      query: () => "/admin/recipe",
-      providesTags: ["Recipe"],
+      query: () => "/admin/recipes",
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Recipe", id })),
+              { type: "Recipe", id: "LIST" },
+            ]
+          : [{ type: "Recipe", id: "LIST" }],
     }),
     // POST new recipe
     createRecipe: builder.mutation({
@@ -30,35 +43,20 @@ const api = createApi({
         body: newRecipe,
       }),
       // Invalidate the recipes cache to trigger a refetch
-      invalidatesTags: ["Recipe"],
+      invalidatesTags: [{ type: "Recipe", id: "LIST" }],
     }),
-    // PATCH recipe by ID with optimistic update
+    // PATCH recipe by ID
     updateRecipe: builder.mutation({
-      query: ({ recipeId, ...patch }) => ({
-        url: `/admin/recipe/${recipeId}`,
-        method: "PATCH",
-        body: patch,
-      }),
-      async onQueryStarted(
-        { recipeId, ...patch },
-        { dispatch, queryFulfilled }
-      ) {
-        // Optimistic update
-        const patchResult = dispatch(
-          api.util.updateQueryData("getRecipes", undefined, (draft) => {
-            const recipe = draft.find((r) => r.id === recipeId);
-            if (recipe) {
-              Object.assign(recipe, patch);
-            }
-          })
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          // Rollback on failure
-          patchResult.undo();
-        }
+      query: ({ recipeId, newRecipe }) => {
+        return {
+          url: `/admin/recipe/${recipeId}`,
+          method: "PATCH",
+          body: newRecipe,
+        };
       },
+      invalidatesTags: (result, error, { recipeId }) => [
+        { type: "Recipe", id: recipeId },
+      ],
     }),
     // DELETE recipe by ID with optimistic update
     deleteRecipe: builder.mutation({
@@ -66,25 +64,27 @@ const api = createApi({
         url: `/admin/recipe/${recipeId}`,
         method: "DELETE",
       }),
-      async onQueryStarted(recipeId, { dispatch, queryFulfilled }) {
-        // Optimistic update
-        const deleteResult = dispatch(
-          api.util.updateQueryData("getRecipes", undefined, (draft) => {
-            return draft.filter((recipe) => recipe.id !== recipeId);
-          })
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          // Rollback on failure
-          deleteResult.undo();
-        }
-      },
+      invalidatesTags: (result, error, recipeId) => [
+        { type: "Recipe", id: recipeId },
+        { type: "Recipe", id: "LIST" },
+      ],
+    }),
+
+    //GET one category
+    getCategory: builder.query({
+      query: (catId) => `/admin/category/${catId}`,
+      providesTags: (result, error, catId) => [{ type: "Category", id: catId }],
     }),
     // GET all categories
     getCategories: builder.query({
-      query: () => "/admin/category",
-      providesTags: ["Category"],
+      query: () => "/admin/categories",
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Category", id })),
+              { type: "Category", id: "LIST" },
+            ]
+          : [{ type: "Category", id: "LIST" }],
     }),
     // POST new category
     createCategory: builder.mutation({
@@ -93,66 +93,41 @@ const api = createApi({
         method: "POST",
         body: newCategory,
       }),
-      // Invalidate the categories cache to trigger a refetch
-      invalidatesTags: ["Category"],
+      // Invalidate the category cache to trigger a refetch
+      invalidatesTags: [{ type: "Category", id: "LIST" }],
     }),
-    // PATCH category by ID with optimistic update
+    // PATCH category by ID
     updateCategory: builder.mutation({
-      query: ({ categoryId, ...patch }) => ({
-        url: `/admin/category/${categoryId}`,
+      query: ({ catId, patch }) => ({
+        url: `/admin/category/${catId}`,
         method: "PATCH",
         body: patch,
       }),
-      async onQueryStarted(
-        { categoryId, ...patch },
-        { dispatch, queryFulfilled }
-      ) {
-        // Optimistic update
-        const patchResult = dispatch(
-          api.util.updateQueryData("getCategories", undefined, (draft) => {
-            const category = draft.find((c) => c.id === categoryId);
-            if (category) {
-              Object.assign(category, patch);
-            }
-          })
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          // Rollback on failure
-          patchResult.undo();
-        }
-      },
+      invalidatesTags: (result, error, { catId }) => [
+        { type: "Category", id: catId },
+      ],
     }),
-    // DELETE category by ID with optimistic update
+    // DELETE category by ID
     deleteCategory: builder.mutation({
-      query: (categoryId) => ({
-        url: `/admin/category/${categoryId}`,
+      query: (catId) => ({
+        url: `/admin/category/${catId}`,
         method: "DELETE",
       }),
-      async onQueryStarted(categoryId, { dispatch, queryFulfilled }) {
-        // Optimistic update
-        const deleteResult = dispatch(
-          api.util.updateQueryData("getCategories", undefined, (draft) => {
-            return draft.filter((category) => category.id !== categoryId);
-          })
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          // Rollback on failure
-          deleteResult.undo();
-        }
-      },
+      invalidatesTags: (result, error, catId) => [
+        { type: "Category", id: catId },
+        { type: "Category", id: "LIST" },
+      ],
     }),
   }),
 });
 
 export const {
+  useGetRecipeQuery,
   useGetRecipesQuery,
   useCreateRecipeMutation,
   useUpdateRecipeMutation,
   useDeleteRecipeMutation,
+  useGetCategoryQuery,
   useGetCategoriesQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,

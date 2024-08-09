@@ -1,6 +1,8 @@
 import useFetchData from "./hooks/useFetchData";
-
+import { logout } from "./slices/user";
+import { useDispatch } from "react-redux";
 const OrderList = () => {
+  const dispatch = useDispatch();
   const {
     data: orders,
     loading,
@@ -10,9 +12,9 @@ const OrderList = () => {
     return <div>Loading....</div>;
   }
   if (error) {
-    return <div>{error}</div>;
+    dispatch(logout());
   }
-  return <div>{orders.toString()}</div>;
+  return <div>orders</div>;
 };
 
 export default OrderList;

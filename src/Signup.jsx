@@ -43,8 +43,11 @@ const Signup = () => {
     if (!response.ok) {
       setError("Feedback", {
         type: "manual",
-        message: responseData.error,
+        message: responseData,
       });
+      if (response.status === 400) {
+        navigate("/login");
+      }
     } else {
       navigate("/login");
     }
@@ -64,11 +67,6 @@ const Signup = () => {
             className="flex flex-col gap-y-4"
           >
             <div>
-              {errors.Feedback && (
-                <pre className="text-red-600 text-sm">
-                  {errors.Feedback.message}
-                </pre>
-              )}
               <Input
                 type="text"
                 placeholder="Full name"
@@ -136,6 +134,11 @@ const Signup = () => {
             >
               Create Account
             </Button>
+            {errors?.Feedback && (
+              <span className="text-red-600 text-sm">
+                {errors.Feedback.message}
+              </span>
+            )}
           </form>
         </CardContent>
         <CardFooter>

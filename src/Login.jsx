@@ -36,7 +36,7 @@ const Login = () => {
     if (!response.ok) {
       setError("Feedback", {
         type: "manual",
-        message: responseData.error,
+        message: responseData,
       });
     } else {
       localStorage.setItem("jwt", responseData.jwtToken);
@@ -97,6 +97,11 @@ const Login = () => {
             >
               Login
             </Button>
+            {errors.Feedback && (
+              <span className="text-red-600 text-sm">
+                {errors.Feedback.message}
+              </span>
+            )}
           </form>
         </CardContent>
         <CardFooter>
