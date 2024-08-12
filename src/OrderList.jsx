@@ -1,8 +1,5 @@
 import useFetchData from "./hooks/useFetchData";
-import { logout } from "./slices/user";
-import { useDispatch } from "react-redux";
 const OrderList = () => {
-  const dispatch = useDispatch();
   const {
     data: orders,
     loading,
@@ -12,7 +9,18 @@ const OrderList = () => {
     return <div>Loading....</div>;
   }
   if (error) {
-    dispatch(logout());
+    console.log(error);
+  }
+  if (!orders.length) {
+    return (
+      <div className="w-full md:max-w-5xl mx-auto mt-2 p-5">
+        <p className="text-xl font-medium">No order to process</p>
+        <p>
+          Currently there is no order to process. Improve visibilty of your
+          recipe by following below steps...
+        </p>
+      </div>
+    );
   }
   return <div>orders</div>;
 };

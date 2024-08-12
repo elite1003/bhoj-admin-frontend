@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
-import { useCreateCategoryMutation } from "./api/apiSlice";
+import { useUpdateCategoryMutation } from "./api/apiSlice";
+import { useNavigate } from "react-router-dom";
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name is required and should have at least 2 characters",
@@ -33,13 +34,13 @@ const formSchema = z.object({
     ),
 });
 
-const AddCategoryForm = ({ recipe }) => {
-  const [createCategory, { isLoading, isSuccess, isError, error }] =
-    useCreateCategoryMutation();
+const EditCategoryForm = ({ category }) => {
+  const navigate = useNavigate();
+  const [updateCategory, { isLoading, error }] = useUpdateCategoryMutation();
   const form = useForm({
     defaultValues: {
-      name: recipe?.name || "",
-      image: recipe?.image || "",
+      name: category?.name || "",
+      image: category?.imageUrl,
     },
     resolver: zodResolver(formSchema),
   });
@@ -48,9 +49,23 @@ const AddCategoryForm = ({ recipe }) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("categoryImage", data.image[0]); // File input field is an array
-    await createCategory(formData);
-    if (isSuccess) toast.success("successfully created category");
-    if (isError) toast.error(`Category submission failed ${error}`);
+    try {
+      updateCategory({
+        catId: category.id,
+        newCategory: formData,
+      })
+        .unwrap()
+        .then(() => {
+          toast.success("successfully updated category");
+          navigate("/category");
+        })
+        .catch(() => {
+          toast.error(`Category updation failed`);
+          console.log(error);
+        });
+    } catch (err) {
+      console.error("Failed to update the category", err);
+    }
   };
   return (
     <>
@@ -92,20 +107,12 @@ const AddCategoryForm = ({ recipe }) => {
             disabled={isLoading}
             className="bg-lime-300 w-full py-2  text-black hover:bg-lime-400"
           >
-            Create Category
+            Update Category
           </Button>
         </form>
       </Form>
-      {isSuccess && (
-        <p className="bg-lime-300 font-medium">Category created successfully</p>
-      )}
-      {isError && (
-        <p className="bg-red-300 font-medium">
-          Category submission failed. try again
-        </p>
-      )}
     </>
   );
 };
 
-export default AddCategoryForm;
+export default EditCategoryForm;

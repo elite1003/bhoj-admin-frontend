@@ -14,12 +14,12 @@ export function AddCategory() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className=" bg-lime-300 text-black hover:bg-lime-400 ml-2"
+          className=" bg-lime-300 text-black hover:bg-lime-400"
         >
           Add Category
         </Button>
       </DialogTrigger>
-      <DialogContent className="px-8 rounded overflow-y-auto max-h-[80vh] w-">
+      <DialogContent className="px-8 rounded overflow-y-auto max-h-[80vh] ">
         <DialogHeader>
           <DialogTitle className="text-center">Add Category</DialogTitle>
         </DialogHeader>

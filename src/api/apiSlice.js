@@ -98,10 +98,10 @@ const api = createApi({
     }),
     // PATCH category by ID
     updateCategory: builder.mutation({
-      query: ({ catId, patch }) => ({
+      query: ({ catId, newCategory }) => ({
         url: `/admin/category/${catId}`,
         method: "PATCH",
-        body: patch,
+        body: newCategory,
       }),
       invalidatesTags: (result, error, { catId }) => [
         { type: "Category", id: catId },

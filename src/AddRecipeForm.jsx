@@ -66,7 +66,7 @@ const AddRecipeForm = () => {
   ] = useCreateRecipeMutation();
   const {
     data: categories,
-    error: isCategoryFetchingError,
+    isError: isCategoryFetchingError,
     isLoading: isCategoryFetching,
   } = useGetCategoriesQuery();
   const form = useForm({
@@ -144,8 +144,10 @@ const AddRecipeForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <div className="flex items-center justify-between">
-                {isCategoryFetching ? (
+              <div className="flex items-center justify-between gap-2">
+                {isCategoryFetchingError ? (
+                  <span>Error in fetching category</span>
+                ) : isCategoryFetching ? (
                   <span>Loading...</span>
                 ) : (
                   <Select
@@ -159,16 +161,13 @@ const AddRecipeForm = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((cat) => (
+                      {categories?.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id.toString()}>
                           {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                )}
-                {isCategoryFetchingError && (
-                  <span>Error in fetching category</span>
                 )}
                 <AddCategory />
               </div>
@@ -203,6 +202,9 @@ const AddRecipeForm = () => {
           Create Recipe
         </Button>
       </form>
+      {isRecipeSaved && (
+        <p className="bg-lime-100 text-black">Recipe saved successfully</p>
+      )}
     </Form>
   );
 };

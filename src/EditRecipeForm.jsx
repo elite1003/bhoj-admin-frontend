@@ -62,8 +62,7 @@ const EditRecipeForm = ({ recipe }) => {
     isError: isCategoryFetchingError,
     isLoading: isCategoryFetching,
   } = useGetCategoriesQuery();
-  const [updateRecipe, { isLoading, /*isSuccess*/ isError }] =
-    useUpdateRecipeMutation();
+  const [updateRecipe, { isLoading, error }] = useUpdateRecipeMutation();
   const form = useForm({
     defaultValues: {
       name: recipe.name,
@@ -82,7 +81,7 @@ const EditRecipeForm = ({ recipe }) => {
     formData.append("catId", data.category);
     formData.append("ingredients", data.ingredients);
     try {
-      await updateRecipe({
+      updateRecipe({
         recipeId: recipe.id,
         newRecipe: formData,
       })
@@ -90,11 +89,13 @@ const EditRecipeForm = ({ recipe }) => {
         .then(() => {
           toast.success("successfully updated recipe");
           navigate("/recipe");
+        })
+        .catch(() => {
+          toast.error(`Category updation failed`);
+          console.log(error);
         });
-
-      isError && toast.error(`Recipe updation failed`);
     } catch (err) {
-      console.error("Failed to update the recipe:", err);
+      console.error("Failed to update the recipe", err);
     }
   };
   return (

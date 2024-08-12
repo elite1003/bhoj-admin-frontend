@@ -15,6 +15,7 @@ import { UserCircle2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { updateName } from "./slices/user";
+
 const Profile = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
