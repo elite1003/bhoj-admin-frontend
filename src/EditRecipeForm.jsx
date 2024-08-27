@@ -21,7 +21,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateRecipeMutation, useGetCategoriesQuery } from "./api/apiSlice";
 import { toast } from "react-toastify";
-import { AddCategory } from "./AddCategory";
+// import { AddCategory } from "./AddCategory";
 import { useNavigate } from "react-router-dom";
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -173,7 +173,7 @@ const EditRecipeForm = ({ recipe }) => {
                 {isCategoryFetchingError && (
                   <span>Error in fetching category</span>
                 )}
-                <AddCategory />
+                {/* <AddCategory /> */}
               </div>
               <FormMessage />
             </FormItem>

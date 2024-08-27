@@ -8,7 +8,7 @@ import RecipeList from "./RecipeList";
 import OrderList from "./OrderList";
 import EditRecipe from "./EditRecipe";
 import Category from "./Category";
-import EditCategory from "./EditCategory";
+// import EditCategory from "./EditCategory";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,10 +35,10 @@ const router = createBrowserRouter([
         path: "category",
         element: <ProtectedRoute element={Category} />,
       },
-      {
-        path: "category/:categoryId",
-        element: <ProtectedRoute element={EditCategory} />,
-      },
+      // {
+      //   path: "category/:categoryId",
+      //   element: <ProtectedRoute element={EditCategory} />,
+      // },
       { path: "/order", element: <ProtectedRoute element={OrderList} /> },
     ],
   },

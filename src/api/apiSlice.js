@@ -72,12 +72,12 @@ const api = createApi({
 
     //GET one category
     getCategory: builder.query({
-      query: (catId) => `/admin/category/${catId}`,
+      query: (catId) => `/category/${catId}`,
       providesTags: (result, error, catId) => [{ type: "Category", id: catId }],
     }),
     // GET all categories
     getCategories: builder.query({
-      query: () => "/admin/categories",
+      query: () => "/category",
       providesTags: (result) =>
         result
           ? [
@@ -89,7 +89,7 @@ const api = createApi({
     // POST new category
     createCategory: builder.mutation({
       query: (newCategory) => ({
-        url: "/admin/category",
+        url: "/category",
         method: "POST",
         body: newCategory,
       }),
@@ -130,7 +130,6 @@ export const {
   useGetCategoryQuery,
   useGetCategoriesQuery,
   useCreateCategoryMutation,
-  useUpdateCategoryMutation,
   useDeleteCategoryMutation,
 } = api;
 

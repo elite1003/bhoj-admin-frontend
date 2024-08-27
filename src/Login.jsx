@@ -30,6 +30,7 @@ const Login = () => {
       body: JSON.stringify({
         email: data.Email,
         password: data.Password,
+        role: "admin",
       }),
     });
     const responseData = await response.json();

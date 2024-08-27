@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateRecipeMutation, useGetCategoriesQuery } from "./api/apiSlice";
-import { AddCategory } from "./AddCategory";
+// import { AddCategory } from "./AddCategory";
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
@@ -137,7 +137,6 @@ const AddRecipeForm = () => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="category"
@@ -169,7 +168,7 @@ const AddRecipeForm = () => {
                     </SelectContent>
                   </Select>
                 )}
-                <AddCategory />
+                {/* <AddCategory /> */}
               </div>
               <FormMessage />
             </FormItem>

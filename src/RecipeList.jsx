@@ -1,10 +1,10 @@
 import { AddRecipe } from "./AddRecipe";
 import { useGetRecipesQuery } from "./api/apiSlice";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+// import { Button } from "@/components/ui/button";
+// import { useNavigate } from "react-router-dom";
 import { Recipe } from "./Recipe";
 const RecipeList = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { data: recipes, isLoading, isError } = useGetRecipesQuery();
   if (isLoading) return <div>Loading...</div>;
   if (isError) {
@@ -14,13 +14,13 @@ const RecipeList = () => {
     <div className="w-full md:max-w-5xl mx-auto mt-2 p-5">
       <div className="px-10 lg:px-0 flex justify-end gap-4 items-center">
         <AddRecipe />
-        <Button
+        {/* <Button
           onClick={() => navigate("/category")}
           variant="outline"
           className=" bg-lime-300 text-black hover:bg-lime-400"
         >
           Manage Category
-        </Button>
+        </Button> */}
       </div>
       {recipes?.length === 0 && (
         <div className="w-full md:max-w-5xl mx-auto mt-2 p-5">
